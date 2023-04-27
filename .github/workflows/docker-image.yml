@@ -1,18 +1,42 @@
-name: Docker Image CI
+name: Build and push Docker image
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    branches:
+      - main
 
 jobs:
-
-  build:
-
+  build-and-push:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          tags: sleya22/hello:latest
+          build-args: |
+            ARG1=value1
+            ARG2=value2
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      
+      - name: Tag Docker image
+        env:
+          GIT_SHA: $(git rev-parse --short HEAD)
+        run: docker tag sleya22/demo:latest sleya22/demo:$GIT_SHA
+
+      - name: Push Docker image
+        run: |
+          docker push sleya22/myhello:latest
+          docker push sleya22/myhello:$GIT_SHA
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+
