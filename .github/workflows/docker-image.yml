@@ -33,8 +33,8 @@ jobs:
 
       - name: Push Docker image
         run: |
-          docker push sleya22/myhello:latest
-          docker push sleya22/myhello:$GIT_SHA
+          docker push sleya22/demo:latest
+          docker push sleya22/demo:$GIT_SHA
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
