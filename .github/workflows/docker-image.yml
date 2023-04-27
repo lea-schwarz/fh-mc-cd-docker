@@ -20,11 +20,9 @@ jobs:
 
       - name: Install dependencies
         run: |
-          cd e04
           go mod download
       - name: Build and test Go application
         run: |
-          cd e04
           go build -v ./...
           go test -v ./...
 
