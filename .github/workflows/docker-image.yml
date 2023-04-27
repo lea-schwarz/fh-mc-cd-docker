@@ -37,7 +37,7 @@ jobs:
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+          password: ${{ secrets.DOCKER_TOKEN }}
 
       - name: Build Docker image
         uses: docker/build-push-action@v2
@@ -45,9 +45,6 @@ jobs:
           context: .
           push: true
           tags: sleya22/demo:latest
-        env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       
       - name: Tag Docker image
         env:
@@ -58,8 +55,5 @@ jobs:
         run: |
           docker push sleya22/demo:latest
           docker push sleya22/demo:${{ github.sha }}
-        env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
 
