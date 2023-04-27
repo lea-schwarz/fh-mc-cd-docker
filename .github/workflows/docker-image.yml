@@ -18,7 +18,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: sleya22/hello:latest
+          tags: sleya22/demo:latest
           build-args: |
             ARG1=value1
             ARG2=value2
