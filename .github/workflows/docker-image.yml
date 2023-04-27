@@ -19,9 +19,6 @@ jobs:
           context: .
           push: true
           tags: sleya22/demo:latest
-          build-args: |
-            ARG1=value1
-            ARG2=value2
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
@@ -32,6 +29,8 @@ jobs:
         run: docker tag sleya22/demo:latest sleya22/demo:$GIT_SHA
 
       - name: Push Docker image
+        env:
+          GIT_SHA: $(git rev-parse --short HEAD)
         run: |
           docker push sleya22/demo:latest
           docker push sleya22/demo:$GIT_SHA
