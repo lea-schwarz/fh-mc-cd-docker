@@ -6,6 +6,28 @@ on:
       - main
 
 jobs:
+  build-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.18.1
+
+      - name: Install dependencies
+        run: |
+          cd e04
+          go mod download
+      - name: Build and test Go application
+        run: |
+          cd e04
+          go build -v ./...
+          go test -v ./...
+
   build-and-push:
     runs-on: ubuntu-latest
 
