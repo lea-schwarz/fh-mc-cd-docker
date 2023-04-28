@@ -27,6 +27,7 @@ jobs:
           go test -v ./...
 
   build-and-push:
+    needs: build-test
     runs-on: ubuntu-latest
 
     steps:
@@ -48,5 +49,39 @@ jobs:
 
       - name: Push Docker image
         run: docker push sleya22/demo:${{ github.sha }}
+
+  trivy-docker:
+    needs: build-and-push
+    name: "Scan for docker vulnerabilities using Trivy"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Run Trivy vulnerability scanner for in docker mode
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: "sleya22/demo:${{ github.sha }}"
+          format: "table"
+          exit-code: "1"
+          ignore-unfixed: true
+          skip-dirs: "/go"
+          vuln-type: "os,library"
+          severity: "CRITICAL"
+
+  trivy-repo:
+    name: "Scan for code vulnerabilities using Trivy"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v3
+
+      - name: Run Trivy vulnerability scanner in repo mode
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: "fs"
+          scan-ref: "."
+          format: "sarif"
+          output: "trivy-results.sarif"
+          severity: "CRITICAL,HIGH"
 
 
