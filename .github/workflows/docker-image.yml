@@ -39,17 +39,12 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build Docker image
+      - name: Build and tag Docker image
+        id: docker_build
         uses: docker/build-push-action@v2
         with:
-          context: .
-          push: true
+          push: false
           tags: sleya22/demo:${{ github.sha }}
-      
-      - name: Tag Docker image
-        env:
-          GIT_SHA: $(git rev-parse --short HEAD)
-        run: docker tag sleya22/demo:${{ github.sha }}
 
       - name: Push Docker image
         run: docker push sleya22/demo:${{ github.sha }}
