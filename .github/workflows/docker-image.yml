@@ -44,18 +44,14 @@ jobs:
         with:
           context: .
           push: true
-          tags: |
-          sleya22/demo:latest  
-          sleya22/demo:$GIT_SHA
+          tags: sleya22/demo:$GIT_SHA
       
       - name: Tag Docker image
         env:
           GIT_SHA: $(git rev-parse --short HEAD)
-        run: docker tag sleya22/demo:latest sleya22/demo:$GIT_SHA
+        run: docker tag sleya22/demo:$GIT_SHA
 
       - name: Push Docker image
-        run: |
-          docker push sleya22/demo:latest
-          docker push sleya22/demo:${{ github.sha }}
+        run: docker push sleya22/demo:${{ github.sha }}
 
 
